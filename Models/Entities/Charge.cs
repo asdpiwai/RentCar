@@ -1,4 +1,5 @@
 ﻿using Rentcar.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Rentcar.Models.Entities
 {
@@ -7,9 +8,11 @@ namespace Rentcar.Models.Entities
         public int Id { get; set; }
         public int BookingId { get; set; }
         public decimal Amount { get; set; }
+        [Required]
+        [StringLength(1000)]
         public string Reason { get; set; } = string.Empty;
         public int ManagerId { get; set; }
-        public ChargeStatus Status { get; set; }
+        public ChargeStatus Status { get; set; } = ChargeStatus.Pending;
         public ChargeType Type { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? PaidAt { get; set; }

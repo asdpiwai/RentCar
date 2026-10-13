@@ -13,6 +13,6 @@ namespace Rentcar.Models.Entities
         public int? ApprovedManagerId { get; set; }
         public DateTime? StartedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
-        public MovementStatus Status { get; set; }
+        public MovementStatus Status { get; set; } = MovementStatus.Pending;
     }
 }

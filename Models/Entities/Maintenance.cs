@@ -1,4 +1,5 @@
 ﻿using Rentcar.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Rentcar.Models.Entities
 {
@@ -7,11 +8,13 @@ namespace Rentcar.Models.Entities
         public int Id { get; set; }
         public int CarId { get; set; }
         public int Mileage { get; set; }
+        [Required]
+        [StringLength(1000)]
         public string Description { get; set; } = string.Empty;
         public DateTime CreatedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public DateTime? StartedAt { get; set; }
-        public MaintenanceStatus Status { get; set; }
+        public MaintenanceStatus Status { get; set; } = MaintenanceStatus.Planned;
         public MaintenanceType Type { get; set; }
     }
 }

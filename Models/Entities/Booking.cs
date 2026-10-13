@@ -13,7 +13,10 @@ namespace Rentcar.Models.Entities
         public DateTime RentalEnd { get; set; }
         public decimal TotalPrice { get; set; }
         public decimal BookingPricePerDay { get; set; }
-        public BookingStatus Status { get; set; }
+        public BookingStatus Status { get; set; } = BookingStatus.Pending;
         public DateTime CreatedAt { get; set; }
+        public Customer Customer { get; set; } = null!;
+        public Car Car { get; set; } = null!;
+        public AdditionalDriver? AdditionalDriver { get; set; }
     }
 }
