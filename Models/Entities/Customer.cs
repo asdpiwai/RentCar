@@ -10,9 +10,9 @@ namespace Rentcar.Models.Entities
         public string Name { get; set; } = string.Empty;
         [Required]
         [StringLength(100)]
-        public string Surname {  get; set; } = string.Empty;
+        public string Surname { get; set; } = string.Empty;
         [StringLength(100)]
-        public string? Patronymic {  get; set; }
+        public string? Patronymic { get; set; }
         [Required]
         [EmailAddress]
         public string Email { get; set; } = string.Empty;
@@ -28,5 +28,6 @@ namespace Rentcar.Models.Entities
         public string? BlockReason { get; set; }
         public DateTime CreatedAt { get; set; }
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public ICollection<DriverLicense> DriverLicenses { get; set; } = new List<DriverLicense>();
     }
 }

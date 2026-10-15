@@ -16,5 +16,8 @@ namespace Rentcar.Models.Entities
         public ChargeType Type { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime? PaidAt { get; set; }
+        public Booking Booking { get; set; } = null!;
+        public Manager Manager { get; set; } = null!;
+        public ICollection<Payment> Payments { get; set; } = new List<Payment>();
     }
 }

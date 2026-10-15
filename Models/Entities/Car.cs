@@ -28,5 +28,9 @@ namespace Rentcar.Models.Entities
         public CarStatus Status { get; set; } = CarStatus.Inspection;
         public Category Category { get; set; } = null!;
         public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public Branch? Branch { get; set; }
+        public ICollection<VehicleInspection> VehicleInspections { get; set; } = new List<VehicleInspection>();
+        public ICollection<CarMovement> CarMovements { get; set; } = new List<CarMovement>();
+        public ICollection<Maintenance> Maintenances { get; set; } = new List<Maintenance>();
     }
 }

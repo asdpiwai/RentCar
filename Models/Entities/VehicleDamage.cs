@@ -11,5 +11,6 @@ namespace Rentcar.Models.Entities
         [StringLength(1000)]
         public string Description { get; set; } = string.Empty;
         public DamageSeverity Severity {  get; set; }
+        public VehicleInspection VehicleInspection { get; set; } = null!;
     }
 }

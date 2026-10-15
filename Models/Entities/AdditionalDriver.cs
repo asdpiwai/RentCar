@@ -31,5 +31,6 @@ namespace Rentcar.Models.Entities
         public string? RejectionReason { get; set; }
         public DateTime? VerificationDate { get; set; }
         public Booking Booking { get; set; } = null!;
+        public Manager? Manager { get; set; }
     }
 }

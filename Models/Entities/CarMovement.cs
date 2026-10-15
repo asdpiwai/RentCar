@@ -14,5 +14,10 @@ namespace Rentcar.Models.Entities
         public DateTime? StartedAt { get; set; }
         public DateTime? CompletedAt { get; set; }
         public MovementStatus Status { get; set; } = MovementStatus.Pending;
+        public Car Car { get; set; } = null!;
+        public Branch FromBranch { get; set; } = null!;
+        public Branch ToBranch { get; set; } = null!;
+        public Manager RequestedManager { get; set; } = null!;
+        public Manager? ApprovedManager { get; set; }
     }
 }

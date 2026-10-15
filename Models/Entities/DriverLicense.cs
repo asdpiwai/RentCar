@@ -19,5 +19,7 @@ namespace Rentcar.Models.Entities
         public int? ManagerId{ get; set; }
         [StringLength(1000)]
         public string? RejectionReason { get; set; }
+        public Customer Customer { get; set; } = null!;
+        public Manager? Manager { get; set; }
     }
 }
