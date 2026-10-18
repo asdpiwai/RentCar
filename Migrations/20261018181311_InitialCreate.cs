@@ -13,27 +13,6 @@ namespace Rentcar.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "Admins",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Surname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Patronymic = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
-                    PasswordHash = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Admins", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Branches",
                 columns: table => new
                 {
@@ -68,7 +47,7 @@ namespace Rentcar.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Customers",
+                name: "Persons",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
@@ -76,45 +55,13 @@ namespace Rentcar.Migrations
                     Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Surname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
                     Patronymic = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: false),
                     DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
                     PhoneNumber = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
-                    PasswordHash = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    IsBlocked = table.Column<bool>(type: "boolean", nullable: false),
-                    BlockReason = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Customers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Managers",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Surname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Patronymic = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    Email = table.Column<string>(type: "text", nullable: false),
-                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
-                    PasswordHash = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
-                    BranchId = table.Column<int>(type: "integer", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Managers", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Managers_Branches_BranchId",
-                        column: x => x.BranchId,
-                        principalTable: "Branches",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                    table.PrimaryKey("PK_Persons", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -154,35 +101,92 @@ namespace Rentcar.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "DriverLicenses",
+                name: "UserAccounts",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    DriverLicenseNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    IssueDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    ExpirationDate = table.Column<DateOnly>(type: "date", nullable: false),
-                    CustomerId = table.Column<int>(type: "integer", nullable: false),
+                    Email = table.Column<string>(type: "character varying(254)", maxLength: 254, nullable: false),
+                    PasswordHash = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: false),
+                    IsBlocked = table.Column<bool>(type: "boolean", nullable: false),
+                    BlockReason = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    VerificationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
-                    ManagerId = table.Column<int>(type: "integer", nullable: true),
-                    RejectionReason = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true)
+                    Role = table.Column<int>(type: "integer", nullable: false),
+                    PersonId = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_DriverLicenses", x => x.Id);
+                    table.PrimaryKey("PK_UserAccounts", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_DriverLicenses_Customers_CustomerId",
-                        column: x => x.CustomerId,
-                        principalTable: "Customers",
+                        name: "FK_UserAccounts_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Admins",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    UserAccountId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Admins", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Admins_UserAccounts_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "UserAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Customers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    UserAccountId = table.Column<int>(type: "integer", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Customers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Customers_UserAccounts_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "UserAccounts",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Managers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    BranchId = table.Column<int>(type: "integer", nullable: false),
+                    UserAccountId = table.Column<int>(type: "integer", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Managers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Managers_Branches_BranchId",
+                        column: x => x.BranchId,
+                        principalTable: "Branches",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_DriverLicenses_Managers_ManagerId",
-                        column: x => x.ManagerId,
-                        principalTable: "Managers",
+                        name: "FK_Managers_UserAccounts_UserAccountId",
+                        column: x => x.UserAccountId,
+                        principalTable: "UserAccounts",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -292,39 +296,36 @@ namespace Rentcar.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "AdditionalDrivers",
+                name: "DriverLicenses",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    Name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Surname = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    Patronymic = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     DriverLicenseNumber = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    BookingId = table.Column<int>(type: "integer", nullable: false),
-                    PhoneNumber = table.Column<string>(type: "character varying(16)", maxLength: 16, nullable: false),
-                    DateOfBirth = table.Column<DateOnly>(type: "date", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IssueDate = table.Column<DateOnly>(type: "date", nullable: false),
                     ExpirationDate = table.Column<DateOnly>(type: "date", nullable: false),
+                    PersonId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    VerificationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     ManagerId = table.Column<int>(type: "integer", nullable: true),
-                    RejectionReason = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
-                    VerificationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                    RejectionReason = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_AdditionalDrivers", x => x.Id);
+                    table.PrimaryKey("PK_DriverLicenses", x => x.Id);
+                    table.UniqueConstraint("AK_DriverLicenses_Id_PersonId", x => new { x.Id, x.PersonId });
                     table.ForeignKey(
-                        name: "FK_AdditionalDrivers_Bookings_BookingId",
-                        column: x => x.BookingId,
-                        principalTable: "Bookings",
+                        name: "FK_DriverLicenses_Managers_ManagerId",
+                        column: x => x.ManagerId,
+                        principalTable: "Managers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
-                        name: "FK_AdditionalDrivers_Managers_ManagerId",
-                        column: x => x.ManagerId,
-                        principalTable: "Managers",
+                        name: "FK_DriverLicenses_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -394,6 +395,50 @@ namespace Rentcar.Migrations
                         name: "FK_VehicleInspections_Managers_ManagerId",
                         column: x => x.ManagerId,
                         principalTable: "Managers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "AdditionalDrivers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    PersonId = table.Column<int>(type: "integer", nullable: false),
+                    DriverLicenseId = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<int>(type: "integer", nullable: false),
+                    BookingId = table.Column<int>(type: "integer", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    ManagerId = table.Column<int>(type: "integer", nullable: true),
+                    RejectionReason = table.Column<string>(type: "character varying(1000)", maxLength: 1000, nullable: true),
+                    VerificationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_AdditionalDrivers", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_AdditionalDrivers_Bookings_BookingId",
+                        column: x => x.BookingId,
+                        principalTable: "Bookings",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AdditionalDrivers_DriverLicenses_DriverLicenseId_PersonId",
+                        columns: x => new { x.DriverLicenseId, x.PersonId },
+                        principalTable: "DriverLicenses",
+                        principalColumns: new[] { "Id", "PersonId" },
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AdditionalDrivers_Managers_ManagerId",
+                        column: x => x.ManagerId,
+                        principalTable: "Managers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_AdditionalDrivers_Persons_PersonId",
+                        column: x => x.PersonId,
+                        principalTable: "Persons",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
                 });
@@ -498,9 +543,25 @@ namespace Rentcar.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_AdditionalDrivers_DriverLicenseId_PersonId",
+                table: "AdditionalDrivers",
+                columns: new[] { "DriverLicenseId", "PersonId" });
+
+            migrationBuilder.CreateIndex(
                 name: "IX_AdditionalDrivers_ManagerId",
                 table: "AdditionalDrivers",
                 column: "ManagerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_AdditionalDrivers_PersonId",
+                table: "AdditionalDrivers",
+                column: "PersonId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Admins_UserAccountId",
+                table: "Admins",
+                column: "UserAccountId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Bookings_CarId",
@@ -563,6 +624,18 @@ namespace Rentcar.Migrations
                 column: "CategoryId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Cars_LicensePlate",
+                table: "Cars",
+                column: "LicensePlate",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Cars_VIN",
+                table: "Cars",
+                column: "VIN",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Charges_BookingId",
                 table: "Charges",
                 column: "BookingId");
@@ -573,14 +646,26 @@ namespace Rentcar.Migrations
                 column: "ManagerId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_DriverLicenses_CustomerId",
+                name: "IX_Customers_UserAccountId",
+                table: "Customers",
+                column: "UserAccountId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DriverLicenses_DriverLicenseNumber",
                 table: "DriverLicenses",
-                column: "CustomerId");
+                column: "DriverLicenseNumber",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_DriverLicenses_ManagerId",
                 table: "DriverLicenses",
                 column: "ManagerId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_DriverLicenses_PersonId",
+                table: "DriverLicenses",
+                column: "PersonId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Maintenances_CarId",
@@ -603,6 +688,12 @@ namespace Rentcar.Migrations
                 column: "BranchId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Managers_UserAccountId",
+                table: "Managers",
+                column: "UserAccountId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Payments_BookingId",
                 table: "Payments",
                 column: "BookingId");
@@ -611,6 +702,30 @@ namespace Rentcar.Migrations
                 name: "IX_Payments_ChargeId",
                 table: "Payments",
                 column: "ChargeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Payments_TransactionId",
+                table: "Payments",
+                column: "TransactionId",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Persons_PhoneNumber",
+                table: "Persons",
+                column: "PhoneNumber",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAccounts_Email",
+                table: "UserAccounts",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_UserAccounts_PersonId",
+                table: "UserAccounts",
+                column: "PersonId",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_VehicleDamages_VehicleInspectionId",
@@ -646,9 +761,6 @@ namespace Rentcar.Migrations
                 name: "CarMovements");
 
             migrationBuilder.DropTable(
-                name: "DriverLicenses");
-
-            migrationBuilder.DropTable(
                 name: "Maintenances");
 
             migrationBuilder.DropTable(
@@ -656,6 +768,9 @@ namespace Rentcar.Migrations
 
             migrationBuilder.DropTable(
                 name: "VehicleDamages");
+
+            migrationBuilder.DropTable(
+                name: "DriverLicenses");
 
             migrationBuilder.DropTable(
                 name: "Charges");
@@ -680,6 +795,12 @@ namespace Rentcar.Migrations
 
             migrationBuilder.DropTable(
                 name: "Branches");
+
+            migrationBuilder.DropTable(
+                name: "UserAccounts");
+
+            migrationBuilder.DropTable(
+                name: "Persons");
         }
     }
 }

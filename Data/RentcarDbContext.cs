@@ -21,6 +21,8 @@ namespace Rentcar.Data
         public DbSet<Payment> Payments { get; set; }
         public DbSet<VehicleDamage> VehicleDamages { get; set; }
         public DbSet<VehicleInspection> VehicleInspections { get; set; }
+        public DbSet<Person> Persons { get; set; }
+        public DbSet<UserAccount> UserAccounts { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -119,11 +121,6 @@ namespace Rentcar.Data
                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<DriverLicense>()
-                .HasOne(dl => dl.Customer)
-                .WithMany(c => c.DriverLicenses)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            modelBuilder.Entity<DriverLicense>()
                 .HasOne(dl => dl.Manager)
                 .WithMany(m => m.DriverLicenses)
                 .OnDelete(DeleteBehavior.Restrict);
@@ -172,6 +169,73 @@ namespace Rentcar.Data
                 .HasOne(vi => vi.Manager)
                 .WithMany(m => m.VehicleInspections)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserAccount>()
+                .HasOne(ua => ua.Person)
+                .WithOne(p => p.UserAccount)
+                .HasForeignKey<UserAccount>(u => u.PersonId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Customer>()
+                .HasOne(c => c.UserAccount)
+                .WithOne()
+                .HasForeignKey<Customer>(c => c.UserAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Manager>()
+                .HasOne(m => m.UserAccount)
+                .WithOne()
+                .HasForeignKey<Manager>(m => m.UserAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Admin>()
+                .HasOne(a => a.UserAccount)
+                .WithOne()
+                .HasForeignKey<Admin>(a => a.UserAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<DriverLicense>()
+                .HasOne(dl => dl.Person)
+                .WithMany(p => p.DriverLicenses)
+                .HasForeignKey(dl => dl.PersonId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AdditionalDriver>()
+                .HasOne(ad => ad.Person)
+                .WithMany(p => p.AdditionalDrivers)
+                .HasForeignKey(ad => ad.PersonId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<AdditionalDriver>()
+                .HasOne(ad => ad.DriverLicense)
+                .WithMany(dl => dl.AdditionalDrivers)
+                .HasForeignKey(ad => new { ad.DriverLicenseId, ad.PersonId })
+                .HasPrincipalKey(dl => new { dl.Id, dl.PersonId })
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<UserAccount>()
+                .HasIndex(ua => ua.Email)
+                .IsUnique();
+
+            modelBuilder.Entity<Person>()
+                .HasIndex(p => p.PhoneNumber)
+                .IsUnique();
+
+            modelBuilder.Entity<Car>()
+                .HasIndex(c => c.VIN)
+                .IsUnique();
+
+            modelBuilder.Entity<Car>()
+                .HasIndex(c => c.LicensePlate)
+                .IsUnique();
+
+            modelBuilder.Entity<DriverLicense>()
+                .HasIndex(dl => dl.DriverLicenseNumber)
+                .IsUnique();
+
+            modelBuilder.Entity<Payment>()
+                .HasIndex(p => p.TransactionId)
+                .IsUnique();
         }
     }
 }

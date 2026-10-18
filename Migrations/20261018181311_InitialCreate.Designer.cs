@@ -12,7 +12,7 @@ using Rentcar.Data;
 namespace Rentcar.Migrations
 {
     [DbContext(typeof(RentcarDbContext))]
-    [Migration("20261017190224_InitialCreate")]
+    [Migration("20261018181311_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -39,36 +39,14 @@ namespace Rentcar.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
-
-                    b.Property<string>("DriverLicenseNumber")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("character varying(50)");
-
-                    b.Property<DateOnly>("ExpirationDate")
-                        .HasColumnType("date");
-
-                    b.Property<DateOnly>("IssueDate")
-                        .HasColumnType("date");
+                    b.Property<int>("DriverLicenseId")
+                        .HasColumnType("integer");
 
                     b.Property<int?>("ManagerId")
                         .HasColumnType("integer");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("Patronymic")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
+                    b.Property<int>("PersonId")
+                        .HasColumnType("integer");
 
                     b.Property<string>("RejectionReason")
                         .HasMaxLength(1000)
@@ -76,11 +54,6 @@ namespace Rentcar.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
 
                     b.Property<DateTime?>("VerificationDate")
                         .HasColumnType("timestamp with time zone");
@@ -91,6 +64,10 @@ namespace Rentcar.Migrations
                         .IsUnique();
 
                     b.HasIndex("ManagerId");
+
+                    b.HasIndex("PersonId");
+
+                    b.HasIndex("DriverLicenseId", "PersonId");
 
                     b.ToTable("AdditionalDrivers");
                 });
@@ -103,44 +80,16 @@ namespace Rentcar.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<string>("Patronymic")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserAccountId")
+                        .IsUnique();
 
                     b.ToTable("Admins");
                 });
@@ -291,6 +240,12 @@ namespace Rentcar.Migrations
 
                     b.HasIndex("CategoryId");
 
+                    b.HasIndex("LicensePlate")
+                        .IsUnique();
+
+                    b.HasIndex("VIN")
+                        .IsUnique();
+
                     b.ToTable("Cars");
                 });
 
@@ -427,48 +382,13 @@ namespace Rentcar.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BlockReason")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<bool>("IsBlocked")
-                        .HasColumnType("boolean");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<string>("Patronymic")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("UserAccountId")
+                        .IsUnique();
 
                     b.ToTable("Customers");
                 });
@@ -483,9 +403,6 @@ namespace Rentcar.Migrations
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
-
-                    b.Property<int>("CustomerId")
-                        .HasColumnType("integer");
 
                     b.Property<string>("DriverLicenseNumber")
                         .IsRequired()
@@ -504,6 +421,9 @@ namespace Rentcar.Migrations
                     b.Property<int?>("ManagerId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("PersonId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("RejectionReason")
                         .HasMaxLength(1000)
                         .HasColumnType("character varying(1000)");
@@ -516,9 +436,12 @@ namespace Rentcar.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("CustomerId");
+                    b.HasIndex("DriverLicenseNumber")
+                        .IsUnique();
 
                     b.HasIndex("ManagerId");
+
+                    b.HasIndex("PersonId");
 
                     b.ToTable("DriverLicenses");
                 });
@@ -585,46 +508,18 @@ namespace Rentcar.Migrations
                     b.Property<int>("BranchId")
                         .HasColumnType("integer");
 
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<DateOnly>("DateOfBirth")
-                        .HasColumnType("date");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PasswordHash")
-                        .IsRequired()
-                        .HasMaxLength(1000)
-                        .HasColumnType("character varying(1000)");
-
-                    b.Property<string>("Patronymic")
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
-
-                    b.Property<string>("PhoneNumber")
-                        .IsRequired()
-                        .HasMaxLength(16)
-                        .HasColumnType("character varying(16)");
-
-                    b.Property<string>("Surname")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)");
+                    b.Property<int>("UserAccountId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
                     b.HasIndex("BranchId");
+
+                    b.HasIndex("UserAccountId")
+                        .IsUnique();
 
                     b.ToTable("Managers");
                 });
@@ -668,7 +563,96 @@ namespace Rentcar.Migrations
 
                     b.HasIndex("ChargeId");
 
+                    b.HasIndex("TransactionId")
+                        .IsUnique();
+
                     b.ToTable("Payments");
+                });
+
+            modelBuilder.Entity("Rentcar.Models.Entities.Person", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<DateOnly>("DateOfBirth")
+                        .HasColumnType("date");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("Patronymic")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasMaxLength(16)
+                        .HasColumnType("character varying(16)");
+
+                    b.Property<string>("Surname")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PhoneNumber")
+                        .IsUnique();
+
+                    b.ToTable("Persons");
+                });
+
+            modelBuilder.Entity("Rentcar.Models.Entities.UserAccount", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("BlockReason")
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasMaxLength(254)
+                        .HasColumnType("character varying(254)");
+
+                    b.Property<bool>("IsBlocked")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasMaxLength(1000)
+                        .HasColumnType("character varying(1000)");
+
+                    b.Property<int>("PersonId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Email")
+                        .IsUnique();
+
+                    b.HasIndex("PersonId")
+                        .IsUnique();
+
+                    b.ToTable("UserAccounts");
                 });
 
             modelBuilder.Entity("Rentcar.Models.Entities.VehicleDamage", b =>
@@ -750,9 +734,37 @@ namespace Rentcar.Migrations
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
+                    b.HasOne("Rentcar.Models.Entities.Person", "Person")
+                        .WithMany("AdditionalDrivers")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Rentcar.Models.Entities.DriverLicense", "DriverLicense")
+                        .WithMany("AdditionalDrivers")
+                        .HasForeignKey("DriverLicenseId", "PersonId")
+                        .HasPrincipalKey("Id", "PersonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Booking");
 
+                    b.Navigation("DriverLicense");
+
                     b.Navigation("Manager");
+
+                    b.Navigation("Person");
+                });
+
+            modelBuilder.Entity("Rentcar.Models.Entities.Admin", b =>
+                {
+                    b.HasOne("Rentcar.Models.Entities.UserAccount", "UserAccount")
+                        .WithOne()
+                        .HasForeignKey("Rentcar.Models.Entities.Admin", "UserAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("Rentcar.Models.Entities.Booking", b =>
@@ -877,22 +889,33 @@ namespace Rentcar.Migrations
                     b.Navigation("Manager");
                 });
 
-            modelBuilder.Entity("Rentcar.Models.Entities.DriverLicense", b =>
+            modelBuilder.Entity("Rentcar.Models.Entities.Customer", b =>
                 {
-                    b.HasOne("Rentcar.Models.Entities.Customer", "Customer")
-                        .WithMany("DriverLicenses")
-                        .HasForeignKey("CustomerId")
+                    b.HasOne("Rentcar.Models.Entities.UserAccount", "UserAccount")
+                        .WithOne()
+                        .HasForeignKey("Rentcar.Models.Entities.Customer", "UserAccountId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("UserAccount");
+                });
+
+            modelBuilder.Entity("Rentcar.Models.Entities.DriverLicense", b =>
+                {
                     b.HasOne("Rentcar.Models.Entities.Manager", "Manager")
                         .WithMany("DriverLicenses")
                         .HasForeignKey("ManagerId")
                         .OnDelete(DeleteBehavior.Restrict);
 
-                    b.Navigation("Customer");
+                    b.HasOne("Rentcar.Models.Entities.Person", "Person")
+                        .WithMany("DriverLicenses")
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
 
                     b.Navigation("Manager");
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("Rentcar.Models.Entities.Maintenance", b =>
@@ -929,7 +952,15 @@ namespace Rentcar.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Rentcar.Models.Entities.UserAccount", "UserAccount")
+                        .WithOne()
+                        .HasForeignKey("Rentcar.Models.Entities.Manager", "UserAccountId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Branch");
+
+                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("Rentcar.Models.Entities.Payment", b =>
@@ -948,6 +979,17 @@ namespace Rentcar.Migrations
                     b.Navigation("Booking");
 
                     b.Navigation("Charge");
+                });
+
+            modelBuilder.Entity("Rentcar.Models.Entities.UserAccount", b =>
+                {
+                    b.HasOne("Rentcar.Models.Entities.Person", "Person")
+                        .WithOne("UserAccount")
+                        .HasForeignKey("Rentcar.Models.Entities.UserAccount", "PersonId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Person");
                 });
 
             modelBuilder.Entity("Rentcar.Models.Entities.VehicleDamage", b =>
@@ -1038,8 +1080,11 @@ namespace Rentcar.Migrations
             modelBuilder.Entity("Rentcar.Models.Entities.Customer", b =>
                 {
                     b.Navigation("Bookings");
+                });
 
-                    b.Navigation("DriverLicenses");
+            modelBuilder.Entity("Rentcar.Models.Entities.DriverLicense", b =>
+                {
+                    b.Navigation("AdditionalDrivers");
                 });
 
             modelBuilder.Entity("Rentcar.Models.Entities.Manager", b =>
@@ -1059,6 +1104,15 @@ namespace Rentcar.Migrations
                     b.Navigation("RequestedCarMovements");
 
                     b.Navigation("VehicleInspections");
+                });
+
+            modelBuilder.Entity("Rentcar.Models.Entities.Person", b =>
+                {
+                    b.Navigation("AdditionalDrivers");
+
+                    b.Navigation("DriverLicenses");
+
+                    b.Navigation("UserAccount");
                 });
 
             modelBuilder.Entity("Rentcar.Models.Entities.VehicleInspection", b =>

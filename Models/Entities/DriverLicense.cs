@@ -11,7 +11,7 @@ namespace Rentcar.Models.Entities
         public string DriverLicenseNumber { get; set; } = string.Empty;
         public DateOnly IssueDate { get; set; }
         public DateOnly ExpirationDate { get; set; }
-        public int CustomerId { get; set; }
+        public int PersonId { get; set; }
         public DateTime CreatedAt { get; set; }
         public bool IsActive { get; set; }
         public VerificationStatus Status { get; set; } = VerificationStatus.WaitingForVerification;
@@ -19,7 +19,8 @@ namespace Rentcar.Models.Entities
         public int? ManagerId{ get; set; }
         [StringLength(1000)]
         public string? RejectionReason { get; set; }
-        public Customer Customer { get; set; } = null!;
+        public Person Person { get; set; } = null!;
         public Manager? Manager { get; set; }
+        public ICollection<AdditionalDriver> AdditionalDrivers { get; set; } = new List<AdditionalDriver>();
     }
 }
