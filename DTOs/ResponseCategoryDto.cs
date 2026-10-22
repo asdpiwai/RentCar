@@ -1,6 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace Rentcar.DTOs
+﻿namespace Rentcar.DTOs
 {
     public class ResponseCategoryDto
     {
