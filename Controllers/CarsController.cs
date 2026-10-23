@@ -16,11 +16,19 @@ namespace Rentcar.Controllers
             _dbContext = dbContext;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<ResponseCarDto>>> GetCar()
-        {
-            var carDTOs = await _dbContext.Cars
-                .Select(car => new ResponseCarDto
+            [HttpGet]
+            public async Task<ActionResult<List<ResponseCarDto>>> GetCar(int? categoryId, int? branchId)
+            {
+                IQueryable<Car> carQuery =  _dbContext.Cars;
+                if (categoryId != null)
+                {
+                    carQuery = carQuery.Where(c => c.CategoryId  == categoryId.Value);
+                }
+                if (branchId != null)
+                {
+                    carQuery = carQuery.Where(c =>  c.BranchId == branchId.Value);
+                }
+                var tmpCarDTO = carQuery.Select(car => new ResponseCarDto
                 {
                     Id = car.Id,
                     Brand = car.Brand,
@@ -32,9 +40,9 @@ namespace Rentcar.Controllers
                     BranchId = car.BranchId,
                     CategoryName = car.Category.Name,
                     BranchName = car.Branch != null ? car.Branch.Name : null,
-                })
-                .ToListAsync();
-            return Ok(carDTOs);
+                });
+                var carDTO = await tmpCarDTO.ToListAsync();
+                return Ok(carDTO);
         }
     }
 }
