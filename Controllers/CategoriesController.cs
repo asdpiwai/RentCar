@@ -15,19 +15,23 @@ namespace Rentcar.Controllers
         {
             _dbContext = dbContext;
         }
+
         [HttpGet]
-        public async Task<ActionResult<List<ResponseCategoryDto>>> GetCategories()
+        public async Task<ActionResult<List<ResponseCategoryDto>>> GetCategories(bool includeInactive = false)
         {
-            var categoryDtos = await _dbContext.Categories
-                .Select(category => new ResponseCategoryDto
-                {
-                    Id = category.Id,
-                    Name = category.Name,
-                    BasePricePerDay = category.BasePricePerDay,
-                    Description = category.Description,
-                })
-                .ToListAsync();
-            return Ok(categoryDtos);
+            IQueryable<Category> categoryQuery = _dbContext.Categories;
+            if (includeInactive == false)
+            {
+                categoryQuery = categoryQuery.Where(c => c.IsActive);
+            }
+            var categoriesDto = await categoryQuery.Select(category => new ResponseCategoryDto
+            {
+                Id = category.Id,
+                Name = category.Name,
+                BasePricePerDay = category.BasePricePerDay,
+                Description = category.Description,
+            }).ToListAsync();
+            return Ok(categoriesDto);
         }
 
         [HttpGet("{id}")]
@@ -91,7 +95,7 @@ namespace Rentcar.Controllers
         {
             var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.Id == id);
             if (category == null) return NotFound();
-            _dbContext.Categories.Remove(category);
+            category.IsActive = false;
             await _dbContext.SaveChangesAsync();
             return NoContent();
         }

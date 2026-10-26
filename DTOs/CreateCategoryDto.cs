@@ -2,7 +2,7 @@
 
 namespace Rentcar.DTOs
 {
-    public class CreateCategoryDto
+    public class CreateCategoryDto : IValidatableObject
     {
         [Required]
         [StringLength(100)]
@@ -12,5 +12,10 @@ namespace Rentcar.DTOs
         [Required]
         [StringLength(1000)]
         public string Description { get; set; } = string.Empty;
+
+        public IEnumerable<ValidationResult> Validate (ValidationContext validationContext)
+        {
+            if (BasePricePerDay != Math.Truncate(BasePricePerDay)) yield return new ValidationResult("Цена за сутки должна быть целым числом");
+        }
     }
 }
