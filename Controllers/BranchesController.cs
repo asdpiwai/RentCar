@@ -17,6 +17,21 @@ namespace Rentcar.Controllers
             _dbContext = dbContext;
         }
 
+        [HttpGet]
+        public async Task<ActionResult<List<ResponseBranchDto>>> GetBranches (bool includeInactive = false)
+        {
+            IQueryable<Branch> branchQuery = _dbContext.Branches;
+            if (!includeInactive ) branchQuery = branchQuery.Where(b => b.IsActive);
+            var branchDto = await branchQuery.Select(branch => new ResponseBranchDto
+            {
+                Id = branch.Id,
+                Name = branch.Name,
+                Address = branch.Address,
+                Capacity = branch.Capacity,
+            }).ToListAsync();
+            return Ok(branchDto);
+        }
+
         [HttpGet("{id}")]
         public async Task<ActionResult<ResponseBranchDto>> GetBranch(int id)
         {
@@ -27,6 +42,7 @@ namespace Rentcar.Controllers
                 Id = branch.Id,
                 Name = branch.Name,
                 Address = branch.Address,
+                Capacity = branch.Capacity,
             };
             return Ok(branchDto);
         }
@@ -48,10 +64,29 @@ namespace Rentcar.Controllers
                 Id = branch.Id,
                 Name = branch.Name,
                 Address = branch.Address,
+                Capacity= branch.Capacity,
             };
             return CreatedAtAction(nameof(GetBranch), new { id = responseBranchDto.Id }, responseBranchDto);
         }
 
+        [HttpPut("{id}")]
+        public async Task<ActionResult<ResponseBranchDto>> UpdateBranch (int id, CreateBranchDto createBranchDto)
+        {
+            var branch = await _dbContext.Branches.FirstOrDefaultAsync(b => b.Id == id);
+            if (branch == null) return NotFound();
+            branch.Name = createBranchDto.Name;
+            branch.Address = createBranchDto.Address;
+            branch.Capacity = createBranchDto.Capacity;
+            await _dbContext.SaveChangesAsync();
+            ResponseBranchDto responseBranchDto = new ResponseBranchDto()
+            {
+                Id = branch.Id,
+                Name = branch.Name,
+                Address = branch.Address,
+                Capacity = branch.Capacity,
+            };
+            return Ok(responseBranchDto);
+        }
 
     }
 }

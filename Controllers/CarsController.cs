@@ -17,9 +17,10 @@ namespace Rentcar.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<ResponseCarDto>>> GetCars(int? categoryId, int? branchId)
+        public async Task<ActionResult<List<ResponseCarDto>>> GetCars(int? categoryId, int? branchId, bool includeInactive = false)
         {
             IQueryable<Car> carQuery = _dbContext.Cars;
+            if (!includeInactive) carQuery = carQuery.Where(c => c.IsActive);
             if (categoryId != null)
             {
                 carQuery = carQuery.Where(c => c.CategoryId == categoryId.Value);
@@ -70,12 +71,12 @@ namespace Rentcar.Controllers
         public async Task<ActionResult<ResponseCarDto>> AddCar(CreateCarDto createCarDto)
         {
             var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.Id == createCarDto.CategoryId);
-            if (category == null) return NotFound();
+            if (category == null || !category.IsActive) return NotFound();
             Branch? branch = null;
             if (createCarDto.BranchId != null)
             {
                 branch = await _dbContext.Branches.FirstOrDefaultAsync(b => b.Id == createCarDto.BranchId);
-                if (branch == null) return NotFound();
+                if (branch == null || !branch.IsActive) return NotFound();
 
             }
             bool vinExists = await _dbContext.Cars.AnyAsync(c => c.VIN == createCarDto.VIN);
@@ -118,12 +119,12 @@ namespace Rentcar.Controllers
             var car = await _dbContext.Cars.FirstOrDefaultAsync(c => c.Id == id);
             if (car == null) return NotFound();
             var category = await _dbContext.Categories.FirstOrDefaultAsync(c => c.Id == createCarDto.CategoryId);
-            if (category == null) return NotFound();
+            if (category == null || !category.IsActive) return NotFound();
             Branch? branch = null;
             if (createCarDto.BranchId != null)
             {
                 branch = await _dbContext.Branches.FirstOrDefaultAsync(b => b.Id == createCarDto.BranchId);
-                if (branch == null) return NotFound();
+                if (branch == null || !branch.IsActive) return NotFound();
 
             }
             bool vinExists = await _dbContext.Cars.AnyAsync(c => c.VIN == createCarDto.VIN && c.Id != id);

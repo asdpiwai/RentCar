@@ -15,7 +15,7 @@ namespace Rentcar.DTOs
 
         public IEnumerable<ValidationResult> Validate (ValidationContext validationContext)
         {
-            if (BasePricePerDay != Math.Truncate(BasePricePerDay)) yield return new ValidationResult("Цена за сутки должна быть целым числом");
+            if (BasePricePerDay != Math.Truncate(BasePricePerDay)) yield return new ValidationResult("Цена за сутки должна быть целым числом", new[] { "BasePricePerDay" });
         }
     }
 }
