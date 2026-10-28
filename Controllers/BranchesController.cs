@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Rentcar.Data;
 using Rentcar.DTOs;
@@ -74,6 +73,7 @@ namespace Rentcar.Controllers
         {
             var branch = await _dbContext.Branches.FirstOrDefaultAsync(b => b.Id == id);
             if (branch == null) return NotFound();
+            if (await _dbContext.Cars.CountAsync(c => c.BranchId == id) > createBranchDto.Capacity) return Conflict();
             branch.Name = createBranchDto.Name;
             branch.Address = createBranchDto.Address;
             branch.Capacity = createBranchDto.Capacity;
@@ -86,6 +86,17 @@ namespace Rentcar.Controllers
                 Capacity = branch.Capacity,
             };
             return Ok(responseBranchDto);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBranch (int id)
+        {
+            var branch = await _dbContext.Branches.FirstOrDefaultAsync(b => b.Id == id);
+            if (branch == null) return NotFound();
+            if (await _dbContext.Cars.AnyAsync(c => c.BranchId == id)) return Conflict();
+            branch.IsActive = false;
+            await _dbContext.SaveChangesAsync();
+            return NoContent();
         }
 
     }

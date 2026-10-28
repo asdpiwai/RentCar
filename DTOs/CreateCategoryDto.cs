@@ -2,7 +2,7 @@
 
 namespace Rentcar.DTOs
 {
-    public class CreateCategoryDto : IValidatableObject
+    public class CreateCategoryDto : IValidatableObject  
     {
         [Required]
         [StringLength(100)]
